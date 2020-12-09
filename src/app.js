@@ -1,17 +1,17 @@
 /** @jsx jsx */
-import {jsx} from '@emotion/core'
+import { jsx } from '@emotion/core'
 
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import VisuallyHidden from '@reach/visually-hidden'
-import {CircleButton, Button, FormGroup, Dialog} from './components/lib'
-import {Logo} from './components/logo'
-import {Input} from './components/lib'
+import { CircleButton, Button, FormGroup, Dialog } from './components/lib'
+import { Logo } from './components/logo'
+import { Input } from './components/lib'
 
-function LoginForm({onSubmit, buttonText}) {
+function LoginForm({ onSubmit, buttonText }) {
   function handleSubmit(event) {
     event.preventDefault()
-    const {username, password} = event.target.elements
+    const { username, password } = event.target.elements
 
     onSubmit({
       username: username.value,
@@ -48,14 +48,14 @@ function LoginForm({onSubmit, buttonText}) {
   )
 }
 
-function Modal({button, label, children}) {
+function Modal({ button, label, children }) {
   const [isOpen, setIsOpen] = React.useState(false)
 
   return (
     <>
-      {React.cloneElement(button, {onClick: () => setIsOpen(true)})}
+      {React.cloneElement(button, { onClick: () => setIsOpen(true) })}
       <Dialog aria-label={label} isOpen={isOpen}>
-        <div css={{display: 'flex', justifyContent: 'flex-end'}}>
+        <div css={{ display: 'flex', justifyContent: 'flex-end' }}>
           <CircleButton onClick={() => setIsOpen(false)}>
             <VisuallyHidden>Close</VisuallyHidden>
             <span aria-hidden>×</span>
@@ -97,14 +97,14 @@ function App() {
         }}
       >
         <Modal label="Login form" button={<Button>Login</Button>}>
-          <h3 css={{textAlign: 'center', fontSize: '2em'}}>Login</h3>
+          <h3 css={{ textAlign: 'center', fontSize: '2em' }}>Login</h3>
           <LoginForm onSubmit={login} buttonText="Login" />
         </Modal>
         <Modal
           label="Registration form"
           button={<Button variant="secondary">Register</Button>}
         >
-          <h3 css={{textAlign: 'center', fontSize: '2em'}}>Register</h3>
+          <h3 css={{ textAlign: 'center', fontSize: '2em' }}>Register</h3>
           <LoginForm onSubmit={register} buttonText="Register" />
         </Modal>
       </div>

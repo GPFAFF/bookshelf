@@ -1,84 +1,80 @@
-import * as React from 'react'
+import { useEffect, useReducer } from 'react';
+import { client } from './api-client'
 
-function useSafeDispatch(dispatch) {
-  const mounted = React.useRef(false)
-  React.useLayoutEffect(() => {
-    mounted.current = true
-    return () => (mounted.current = false)
-  }, [])
-  return React.useCallback(
-    (...args) => (mounted.current ? dispatch(...args) : void 0),
-    [dispatch],
-  )
-}
-
-// Example usage:
-// const {data, error, status, run} = useAsync()
-// React.useEffect(() => {
-//   run(fetchPokemon(pokemonName))
-// }, [pokemonName, run])
-const defaultInitialState = {status: 'idle', data: null, error: null}
-function useAsync(initialState) {
-  const initialStateRef = React.useRef({
-    ...defaultInitialState,
-    ...initialState,
-  })
-  const [{status, data, error}, setState] = React.useReducer(
-    (s, a) => ({...s, ...a}),
-    initialStateRef.current,
-  )
-
-  const safeSetState = useSafeDispatch(setState)
-
-  const setData = React.useCallback(
-    data => safeSetState({data, status: 'resolved'}),
-    [safeSetState],
-  )
-  const setError = React.useCallback(
-    error => safeSetState({error, status: 'rejected'}),
-    [safeSetState],
-  )
-  const reset = React.useCallback(() => safeSetState(initialStateRef.current), [
-    safeSetState,
-  ])
-
-  const run = React.useCallback(
-    promise => {
-      if (!promise || !promise.then) {
-        throw new Error(
-          `The argument passed to useAsync().run must be a promise. Maybe a function that's passed isn't returning anything?`,
-        )
+const useAsync = () => {
+  const bookReducer = (state, action) => {
+    switch (action.type) {
+      case 'idle':
+        return {
+          ...state,
+          status: 'idle',
+        }
+      case 'loading':
+        return {
+          ...state,
+          loading: true,
+          query: action.query,
+          queried: action.queried,
+          status: 'loading'
+        }
+      case 'success':
+        return {
+          ...state,
+          loading: false,
+          data: action.data,
+          query: '',
+          queried: false,
+          status: 'success'
+        }
+      case 'error':
+        return {
+          error: action.error,
+          status: 'error'
+        }
+      default: {
+        return state;
       }
-      safeSetState({status: 'pending'})
-      return promise.then(
-        data => {
-          setData(data)
-          return data
-        },
-        error => {
-          setError(error)
-          return Promise.reject(error)
-        },
-      )
-    },
-    [safeSetState, setData, setError],
-  )
+    }
+  }
+
+  const initialState = {
+    data: null,
+    query: '',
+    queried: false,
+    status: 'idle',
+    error: null,
+  }
+
+  const [reducerState, dispatch] = useReducer(bookReducer, initialState);
+  const { data, query, queried, status, error } = reducerState;
+
+  const isLoading = status === 'loading';
+  const isSuccess = status === 'success';
+  const isError = status === 'error';
+
+  useEffect(() => {
+    if (!queried) return;
+    const getData = async () => {
+
+      const response = await client(`books?query=${encodeURIComponent(query)}`);
+      console.log(response);
+      !response.status
+        ? dispatch({ type: 'success', data: response })
+        : dispatch({ type: 'error', error: response.message })
+    }
+    getData();
+  }, [query, queried])
+
 
   return {
-    // using the same names that react-query uses for convenience
-    isIdle: status === 'idle',
-    isLoading: status === 'pending',
-    isError: status === 'rejected',
-    isSuccess: status === 'resolved',
-
-    setData,
-    setError,
-    error,
-    status,
     data,
-    run,
-    reset,
+    dispatch,
+    error,
+    isError,
+    isLoading,
+    isSuccess,
+    status,
   }
 }
 
-export {useAsync}
+export { useAsync }
