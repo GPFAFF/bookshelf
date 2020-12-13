@@ -1,17 +1,17 @@
 /** @jsx jsx */
-import {jsx} from '@emotion/core'
+import { jsx } from '@emotion/core'
 
-import {Link as RouterLink} from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import styled from '@emotion/styled/macro'
-import {keyframes} from '@emotion/core'
+import { keyframes } from '@emotion/core'
 import * as colors from 'styles/colors'
 import * as mq from 'styles/media-queries'
-import {Dialog as ReachDialog} from '@reach/dialog'
-import {FaSpinner} from 'react-icons/fa'
+import { Dialog as ReachDialog } from '@reach/dialog'
+import { FaSpinner } from 'react-icons/fa'
 
 const spin = keyframes({
-  '0%': {transform: 'rotate(0deg)'},
-  '100%': {transform: 'rotate(360deg)'},
+  '0%': { transform: 'rotate(0deg)' },
+  '100%': { transform: 'rotate(360deg)' },
 })
 
 const CircleButton = styled.button({
@@ -61,7 +61,7 @@ const Button = styled.button(
     lineHeight: '1',
     borderRadius: '3px',
   },
-  ({variant = 'primary'}) => buttonVariants[variant],
+  ({ variant = 'primary' }) => buttonVariants[variant],
 )
 
 const inputStyles = {
@@ -70,7 +70,7 @@ const inputStyles = {
   padding: '8px 12px',
 }
 
-const Input = styled.input({borderRadius: '3px'}, inputStyles)
+const Input = styled.input({ borderRadius: '3px' }, inputStyles)
 const Textarea = styled.textarea(inputStyles)
 
 const Dialog = styled(ReachDialog)({
@@ -116,21 +116,21 @@ const Link = styled(RouterLink)({
 })
 
 const errorMessageVariants = {
-  stacked: {display: 'block'},
-  inline: {display: 'inline-block'},
+  stacked: { display: 'block' },
+  inline: { display: 'inline-block' },
 }
 
-function ErrorMessage({error, variant = 'stacked', ...props}) {
+function ErrorMessage({ error, variant = 'stacked', ...props }) {
   return (
     <div
       role="alert"
-      css={[{color: colors.danger}, errorMessageVariants[variant]]}
+      css={[{ color: colors.danger }, errorMessageVariants[variant]]}
       {...props}
     >
       <span>There was an error: </span>
       <pre
         css={[
-          {whiteSpace: 'break-spaces', margin: '0', marginBottom: -5},
+          { whiteSpace: 'break-spaces', margin: '0', marginBottom: -5 },
           errorMessageVariants[variant],
         ]}
       >
@@ -140,7 +140,7 @@ function ErrorMessage({error, variant = 'stacked', ...props}) {
   )
 }
 
-function FullPageErrorFallback({error}) {
+function FullPageErrorFallback({ error }) {
   return (
     <div
       role="alert"
