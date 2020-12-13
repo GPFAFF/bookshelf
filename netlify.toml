@@ -1,3 +1,9 @@
 [build]
   command = "npm run setup"
   publish = "build"
+
+[[redirects]]
+ from = "/"
+ to = "/discover"
+ status = 302
+ force = true

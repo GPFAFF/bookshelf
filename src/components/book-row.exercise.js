@@ -1,18 +1,20 @@
 /** @jsx jsx */
-import {jsx} from '@emotion/core'
+import { jsx } from '@emotion/core'
 
 // We're going to turn the entire book row into a link to the book page
 // 🐨 import the Link component from react-router-dom
 import * as mq from 'styles/media-queries'
 import * as colors from 'styles/colors'
+import { Link } from 'react-router-dom';
 
-function BookRow({book}) {
-  const {title, author, coverImageUrl} = book
+function BookRow({ book }) {
+  const { title, author, coverImageUrl } = book
 
   const id = `book-row-book-${book.id}`
 
   return (
-    <div
+    <Link
+      to={`/book/${book.id}`}
       css={{
         display: 'flex',
         alignItems: 'center',
@@ -20,10 +22,6 @@ function BookRow({book}) {
         position: 'relative',
       }}
     >
-      {/*
-          🐨 Turn this div into a Link
-          and add a to prop to make it direct to `/book/${book.id}`
-      */}
       <div
         aria-labelledby={id}
         css={{
@@ -32,7 +30,7 @@ function BookRow({book}) {
           display: 'grid',
           gridTemplateColumns: '140px 1fr',
           gridGap: 20,
-          border: `1px solid ${colors.gray20}`,
+          border: `1px solid ${colors.gray20} `,
           color: colors.text,
           padding: '1.25em',
           borderRadius: '3px',
@@ -54,12 +52,12 @@ function BookRow({book}) {
           <img
             src={coverImageUrl}
             alt={`${title} book cover`}
-            css={{maxHeight: '100%', width: '100%'}}
+            css={{ maxHeight: '100%', width: '100%' }}
           />
         </div>
-        <div css={{flex: 1}}>
-          <div css={{display: 'flex', justifyContent: 'space-between'}}>
-            <div css={{flex: 1}}>
+        <div css={{ flex: 1 }}>
+          <div css={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div css={{ flex: 1 }}>
               <h2
                 id={id}
                 css={{
@@ -71,7 +69,7 @@ function BookRow({book}) {
                 {title}
               </h2>
             </div>
-            <div css={{marginLeft: 10}}>
+            <div css={{ marginLeft: 10 }}>
               <div
                 css={{
                   marginTop: '0.4em',
@@ -87,8 +85,8 @@ function BookRow({book}) {
           <small>{book.synopsis.substring(0, 500)}...</small>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
-export {BookRow}
+export { BookRow }
