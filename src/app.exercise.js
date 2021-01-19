@@ -1,23 +1,24 @@
 /** @jsx jsx */
-import {jsx} from '@emotion/core'
+import { jsx } from '@emotion/core'
 
 import * as React from 'react'
 import * as auth from 'auth-provider'
-import {BrowserRouter as Router} from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { queryCache } from 'react-query'
 // 🐨 you'll need the queryCache from react-query
-import {FullPageSpinner} from './components/lib'
+import { FullPageSpinner } from './components/lib'
 import * as colors from './styles/colors'
-import {client} from './utils/api-client'
-import {useAsync} from './utils/hooks'
-import {AuthenticatedApp} from './authenticated-app'
-import {UnauthenticatedApp} from './unauthenticated-app'
+import { client } from './utils/api-client'
+import { useAsync } from './utils/hooks'
+import { AuthenticatedApp } from './authenticated-app'
+import { UnauthenticatedApp } from './unauthenticated-app'
 
 async function getUser() {
   let user = null
 
   const token = await auth.getToken()
   if (token) {
-    const data = await client('me', {token})
+    const data = await client('me', { token })
     user = data.user
   }
 
@@ -44,7 +45,7 @@ function App() {
   const register = form => auth.register(form).then(user => setData(user))
   const logout = () => {
     auth.logout()
-    // 🐨 clear the query cache with queryCache.clear()
+    queryCache.clear()
     setData(null)
   }
 
@@ -71,15 +72,15 @@ function App() {
   }
 
   if (isSuccess) {
-    const props = {user, login, register, logout}
+    const props = { user, login, register, logout }
     return user ? (
       <Router>
         <AuthenticatedApp {...props} />
       </Router>
     ) : (
-      <UnauthenticatedApp {...props} />
-    )
+        <UnauthenticatedApp {...props} />
+      )
   }
 }
 
-export {App}
+export { App }
