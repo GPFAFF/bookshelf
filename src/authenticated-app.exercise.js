@@ -1,5 +1,7 @@
 /** @jsx jsx */
+import { useContext } from 'react';
 import { jsx } from '@emotion/core'
+
 import { Routes, Route, Link as RouterLink, useMatch } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Button, ErrorMessage, FullPageErrorFallback } from './components/lib'
@@ -28,7 +30,8 @@ function ErrorFallback({ error }) {
 }
 
 function AuthenticatedApp() {
-  const { user, logout } = useAuth()
+  const { user, logout } = useContext(AuthContext)
+  console.log(user, logout)
   return (
     <ErrorBoundary FallbackComponent={FullPageErrorFallback}>
       <div
@@ -70,7 +73,7 @@ function AuthenticatedApp() {
           </ErrorBoundary>
         </main>
       </div>
-    </ErrorBoundary>
+    </ErrorBoundary >
   )
 }
 

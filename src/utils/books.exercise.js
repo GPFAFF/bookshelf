@@ -1,8 +1,9 @@
 // 🐨 we're going to use React hooks in here now so we'll need React
-import { useCallback } from 'react'
+
+import { useCallback, useContext } from 'react'
 import { useQuery, queryCache } from 'react-query'
 // 🐨 get AuthContext from context/auth-context
-import { useAuth } from 'context/auth-context.exercise'
+import { AuthContext } from 'context/auth-context.exercise'
 import { client } from './api-client'
 import bookPlaceholderSvg from 'assets/book-placeholder.svg'
 
@@ -39,14 +40,14 @@ const getBookSearchConfig = (query, user) => ({
 
 // 💣 remove the user argument here
 function useBookSearch(query) {
-  const { user } = useAuth()
+  const { user } = useContext(AuthContext)
   const result = useQuery(getBookSearchConfig(query, user))
   return { ...result, books: result.data ?? loadingBooks }
 }
 
 // 💣 remove the user argument here
 function useBook(bookId) {
-  const { user } = useAuth()
+  const { user } = useContext(AuthContext)
   const { data } = useQuery({
     queryKey: ['book', { bookId }],
     queryFn: () =>
