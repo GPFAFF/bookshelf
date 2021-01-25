@@ -2,17 +2,15 @@
 import { jsx } from '@emotion/core'
 
 import * as React from 'react'
-import VisuallyHidden from '@reach/visually-hidden'
 import {
   Input,
-  CircleButton,
   Button,
   Spinner,
   FormGroup,
   ErrorMessage,
 } from './components/lib'
 import './components/modal'
-import { Modal, ModalContents, ModalOpenButton, ModalDismissButton } from './components/modal'
+import { Modal, ModalOpenButton, ModalContents } from './components/modal'
 import { Logo } from './components/logo'
 import { useAuth } from './context/auth-context'
 import { useAsync } from './utils/hooks'
@@ -92,37 +90,26 @@ function UnauthenticatedApp() {
       >
         <Modal>
           <ModalOpenButton>
-            <Button onSubmit={login} variant="primary">Login</Button>
+            <Button
+              onClick={() => console.log('yoooooooo')}
+              onSubmit={login}
+              variant="primary"
+            >
+              Login
+            </Button>
           </ModalOpenButton>
-          <ModalContents ariaLabel="Modal label (for screen readers)">
-            <ModalDismissButton>
-              <div css={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <CircleButton>
-                  <VisuallyHidden>Close</VisuallyHidden>
-                  <span aria-hidden>×</span>
-                </CircleButton>
-              </div>
-            </ModalDismissButton>
-            <h3 css={{ textAlign: 'center', fontSize: '2em' }}>Login</h3>
+          <ModalContents ariaLabel="Modal label (for screen readers)" title="Login">
             <LoginForm onSubmit={login} submitButton={<Button variant="primary">Login</Button>} />
           </ModalContents>
         </Modal>
 
         <Modal>
           <ModalOpenButton>
-            <Button variant="secondary">Register</Button>
+            <Button onClick={() => console.log('registerrrr')}
+              variant="secondary">Register</Button>
           </ModalOpenButton>
-          <ModalContents ariaLabel="Modal label (for screen readers)">
-            <ModalDismissButton>
-              <div css={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <CircleButton>
-                  <VisuallyHidden>Close</VisuallyHidden>
-                  <span aria-hidden>×</span>
-                </CircleButton>
-              </div>
-            </ModalDismissButton>
-            <h3 css={{ textAlign: 'center', fontSize: '2em' }}>Register</h3>
-            <LoginForm onSubmit={register} submitButton={<Button variant="secondary">Register</Button>} />
+          <ModalContents ariaLabel="Modal label (for screen readers)" title="Register">
+            <LoginForm onSubmit={register} submitButton={<Button variant="primary">Register</Button>} />
           </ModalContents>
         </Modal>
       </div>

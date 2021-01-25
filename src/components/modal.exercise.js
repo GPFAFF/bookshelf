@@ -3,28 +3,8 @@
 // 📜 https://reacttraining.com/reach-ui/dialog/
 import * as React from 'react'
 import { Dialog } from './lib'
-
-// 💰 Here's a reminder of how your components will be used:
-/*
-<Modal>
-  <ModalOpenButton>
-    <button>Open Modal</button>
-  </ModalOpenButton>
-  <ModalContents aria-label="Modal label (for screen readers)">
-    <ModalDismissButton>
-      <button>Close Modal</button>
-    </ModalDismissButton>
-    <h3>Modal title</h3>
-    <div>Some great contents of the modal</div>
-  </ModalContents>
-</Modal>
-*/
-
-
-// function ModalButton({ children }) {
-//   { React.cloneElement(openButton, { onClick: () => setIsOpen(true) }) }
-
-// }
+import VisuallyHidden from '@reach/visually-hidden'
+import { CircleButton } from '../components/lib'
 
 const ModalContext = React.createContext({})
 ModalContext.displayName = 'ModalContext'
@@ -36,6 +16,9 @@ ModalContext.displayName = 'ModalContext'
 // 🐨 create a Modal component that manages the isOpen state (via useState)
 // and renders the ModalContext.Provider with the value which will pass the
 // isOpen state and setIsOpen function
+
+const callAll = (...fns) => (...args) => fns.forEach(fn => fn && fn(...args));
+
 function Modal({ children, props }) {
   const [isOpen, setIsOpen] = React.useState(false)
 
@@ -64,18 +47,22 @@ function Modal({ children, props }) {
 
 function ModalOpenButton({ children, props }) {
   const { setIsOpen } = React.useContext(ModalContext)
-  return React.cloneElement(children, { onClick: () => setIsOpen(true) })
+  return React.cloneElement(children, {
+    onClick: callAll(() => setIsOpen(true), children.props.onClick),
+  })
 }
 
 function ModalDismissButton({ children }) {
   const { setIsOpen } = React.useContext(ModalContext)
-  return React.cloneElement(children, { onClick: () => setIsOpen(false) })
+  return React.cloneElement(children, {
+    onClick: callAll(() => setIsOpen(false), children.props.onClick),
+  })
 }
 
 // 🐨 create a ModalContents component which renders the Dialog.
 // Set the isOpen prop and the onDismiss prop should set isOpen to close
 // 💰 be sure to forward along the rest of the props (especially children).
-function ModalContents({ children, ariaLabel, props }) {
+function ModalContentsBase({ children, ariaLabel, props }) {
   const { isOpen, setIsOpen } = React.useContext(ModalContext)
 
   return (
@@ -87,10 +74,26 @@ function ModalContents({ children, ariaLabel, props }) {
     >
       {children}
     </Dialog >
+  )
+}
 
+function ModalContents({ title, children, ...props }) {
+  return (
+    <ModalContentsBase {...props}>
+      <div css={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <ModalDismissButton>
+          <CircleButton>
+            <VisuallyHidden>Close</VisuallyHidden>
+            <span aria-hidden>×</span>
+          </CircleButton>
+        </ModalDismissButton>
+      </div>
+      <h3 css={{ textAlign: 'center', fontSize: '2em' }}>{title}</h3>
+      {children}
+    </ModalContentsBase>
   )
 }
 
 // 🐨 don't forget to export all the components here
 
-export { Modal, ModalContents, ModalOpenButton, ModalDismissButton }
+export { Modal, ModalContentsBase, ModalContents, ModalOpenButton, ModalDismissButton, callAll }
